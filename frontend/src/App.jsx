@@ -1,22 +1,18 @@
 import { useEffect } from "react";
-import Navbar from "./components/Navbar";
 import { Routes, Route, Navigate } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
-import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import { useAuthStore } from "./store/useAuthStore";
 import { Toaster } from "react-hot-toast";
-import { useThemeStore } from "./store/useThemeStore";
 import { Loader } from "lucide-react";
+import MainLayout from "./components/MainLayout";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
 
-  const { theme } = useThemeStore();
-
-  console.log(onlineUsers)
+  console.log(onlineUsers);
 
   useEffect(() => {
     checkAuth();
@@ -32,14 +28,18 @@ const App = () => {
     );
 
   return (
-    <div data-theme={theme}>
-      <Navbar />
-
+    <div data-theme="night">
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <HomePage /> : <Navigate to="/login" />}
-        />
+        <Route element={<MainLayout />}>
+          <Route
+            path="/"
+            element={authUser ? <HomePage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/profile"
+            element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+          />
+        </Route>
         <Route
           path="/signup"
           element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
@@ -48,13 +48,7 @@ const App = () => {
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to="/" />}
         />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route
-          path="/profile"
-          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
-        />
       </Routes>
-
       <Toaster />
     </div>
   );

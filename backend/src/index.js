@@ -1,39 +1,45 @@
-import express from 'express'
-import dotenv from "dotenv"
-import cookieParser from "cookie-parser"
-import cors from 'cors'
-import path from "path"
+import express from "express";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
 
-import authRoutes from "./routes/auth.route.js"
-import messageRoutes from "./routes/message.route.js"
-import { connectDB } from './lib/db.js';
-import { app, server } from './lib/socket.js'
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
+import { connectDB } from "./lib/db.js";
+import { app, server } from "./lib/socket.js";
 
-dotenv.config()
+dotenv.config();
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
+    
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://realtime-chat-app-ru36.onrender.com",
+];
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
-app.use(cors({
-    origin: "http://localhost:5173",
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: allowedOrigins,
     credentials: true,
-}))
+  })
+);
 
-app.use("/api/auth", authRoutes)
+app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-if(process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")))
-
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
-    })
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
 }
 
 server.listen(PORT, () => {
-    console.log(`Server is Running on Port: ${PORT}`);
-    connectDB();
-})
+  console.log(`Server running on port ${PORT}`);
+  connectDB();
+});
