@@ -23,8 +23,11 @@ const App = () => {
 
   if (isCheckingAuth && !authUser)
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen gap-3">
         <Loader className="size-10 animate-spin" />
+        <p className="text-sm text-base-content/70">
+          Please wait, the server will start in few seconds...
+        </p>
       </div>
     );
 
@@ -32,10 +35,7 @@ const App = () => {
     <div data-theme="night">
       <Routes>
         <Route element={<MainLayout />}>
-          <Route
-            path="/"
-            element={authUser ? <HomePage /> : <LandingPage />}
-          />
+          <Route path="/" element={authUser ? <HomePage /> : <LandingPage />} />
           <Route
             path="/profile"
             element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
