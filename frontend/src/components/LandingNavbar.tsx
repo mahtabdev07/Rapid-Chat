@@ -10,7 +10,7 @@ export const LandingNavbar = () => {
           <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
             <MessageCircle className="text-primary-content" size={18} />
           </div>
-          <span className="text-xl font-semibold">Chatify</span>
+          <span className="hidden sm:block text-lg font-semibold">Rapid Chat</span>
         </Link>
 
         {/* Actions */}

@@ -15,9 +15,9 @@ export default function LandingPage() {
       <LandingNavbar />
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-22 sm:py-38 grid md:grid-cols-2 gap-16 items-center">
-          <div className="p-2">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-22 sm:py-34 grid md:grid-cols-2 gap-16 items-center sm:text-start text-center">
+          <div className="w-full max-w-xl">
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
               Real‑time conversations.
               <br />
               <span className="text-primary">Zero friction.</span>
@@ -26,7 +26,7 @@ export default function LandingPage() {
               A fast, secure real‑time chat app with online presence, instant
               notifications, and a clean modern UI.
             </p>
-            <div className="mt-8 flex gap-4">
+            <div className="mt-8 flex gap-4 sm:justify-start justify-center">
               <Link to="/login" className="btn btn-primary">
                 Get Started
               </Link>
