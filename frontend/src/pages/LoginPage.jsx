@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageCircle } from "lucide-react";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,137 +13,143 @@ const LoginPage = () => {
 
   const { login, isLoggingIn } = useAuthStore();
 
-  // Handler for normal login
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(formData);
   };
 
-  // Handler for guest login
   const handleGuestLogin = async () => {
     setIsGuestLoggingIn(true);
-    const guestCredentials = {
-      email: "guest@gmail.com",
-      password: "guest@123",
-    };
     try {
-      await login(guestCredentials);
+      await login({
+        email: "guest@gmail.com",
+        password: "guest@123",
+      });
     } finally {
       setIsGuestLoggingIn(false);
     }
   };
 
   return (
-    <div className="flex flex-col justify-center items-center p-2 sm:p-12 h-screen">
-      <div className="w-full max-w-md space-y-8 border border-primary/10 shadow p-10 rounded-4xl">
-        {/* Logo and Heading */}
-        <div className="text-center mb-8">
-          <div className="flex flex-col items-center gap-2 group">
-            <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-            <p className="text-base-content/60">Log in to your account</p>
+    <div className="min-h-[100svh] flex items-center justify-center sm:px-4 px-0 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
+
+      {/* Card */}
+      <div className="relative w-full sm:h-full h-[100svh] max-w-md bg-base-100/80 backdrop-blur border border-primary/10 rounded-none sm:rounded-2xl shadow-xl sm:p-8 px-2 py-8">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shadow-lg">
+            <MessageCircle className="text-primary-content" />
           </div>
+          <h1 className="text-2xl font-bold mt-4">Welcome back</h1>
+          <p className="text-base-content/60 mt-1">
+            Log in to continue chatting
+          </p>
         </div>
+
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Field */}
-          <div className="form-control">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div className="form-control space-y-1">
             <label className="label">
               <span className="label-text font-medium">Email</span>
             </label>
-            <div className="relative flex items-center">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-base-content/40" />
-              </div>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 w-5 h-5" />
               <input
-                type="text"
-                className="input input-bordered rounded-xl text-lg py-6 bg-transparent focus:border-base-content/40 focus:outline-base-content/40 w-full pl-10"
-                placeholder="example@email.com"
+                type="email"
+                className="input input-bordered w-full pl-10 py-6 rounded-md sm:rounded-xl bg-transparent" 
+                placeholder="you@example.com"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                autoComplete="email"
                 required
               />
             </div>
           </div>
-          {/* Password Field */}
-          <div className="form-control">
+
+          {/* Password */}
+          <div className="form-control space-y-1">
             <label className="label">
               <span className="label-text font-medium">Password</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-base-content/40" />
-              </div>
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 w-5 h-5" />
               <input
                 type={showPassword ? "text" : "password"}
-                className="input input-bordered rounded-xl text-lg py-6 bg-transparent focus:border-base-content/40 focus:outline-base-content/40 w-full pl-10"
+                className="input input-bordered w-full pl-10 py-6 rounded-md sm:rounded-xl bg-transparent"
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                autoComplete="current-password"
                 required
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-base-content/40 cursor-pointer" />
+                  <EyeOff className="w-5 h-5 text-base-content/40" />
                 ) : (
-                  <Eye className="h-5 w-5 text-base-content/40 cursor-pointer" />
+                  <Eye className="w-5 h-5 text-base-content/40" />
                 )}
               </button>
             </div>
           </div>
-          {/* Login Buttons */}
-          <div className="flex flex-col items-center gap-3">
-            {/* Normal Login */}
-            <button
-              type="submit"
-              className="btn btn-primary w-full rounded-xl py-6"
-              disabled={isLoggingIn || isGuestLoggingIn}
-            >
-              {isLoggingIn && !isGuestLoggingIn ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span className="ml-2">Logging in...</span>
-                </>
-              ) : (
-                "Log in"
-              )}
-            </button>
-            {/* Guest Login */}
-            <button
-              type="button"
-              className="btn border border-white/40 w-full rounded-xl py-6"
-              disabled={isLoggingIn || isGuestLoggingIn}
-              onClick={handleGuestLogin}
-            >
-              {isGuestLoggingIn ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span className="ml-2">Logging in as Guest...</span>
-                </>
-              ) : (
-                "Login as a Guest"
-              )}
-            </button>
+
+          {/* Login button */}
+          <button
+            type="submit"
+            className="btn btn-primary w-full rounded-md sm:rounded-xl py-6"
+            disabled={isLoggingIn || isGuestLoggingIn}
+          >
+            {isLoggingIn && !isGuestLoggingIn ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="ml-2">Logging in...</span>
+              </>
+            ) : (
+              "Log in"
+            )}
+          </button>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 text-sm text-base-content/50">
+            <div className="flex-1 h-px bg-primary/10" />
+            OR
+            <div className="flex-1 h-px bg-primary/10" />
           </div>
+
+          {/* Guest login */}
+          <button
+            type="button"
+            onClick={handleGuestLogin}
+            disabled={isLoggingIn || isGuestLoggingIn}
+            className="btn btn-outline w-full rounded-md sm:rounded-xl py-6"
+          >
+            {isGuestLoggingIn ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="ml-2">Logging in as Guest...</span>
+              </>
+            ) : (
+              "Continue as Guest"
+            )}
+          </button>
         </form>
-        <div className="text-center">
-          <p className="text-base-content/60">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup" className="link link-primary">
-              Signup
-            </Link>
-          </p>
-        </div>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-base-content/60 mt-6">
+          Don&apos;t have an account?{" "}
+          <Link to="/signup" className="link link-primary no-underline">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );

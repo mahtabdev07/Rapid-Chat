@@ -75,21 +75,21 @@ const MessageInput = () => {
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex items-center">
-        <div className="flex-1 flex">
+      <form onSubmit={handleSendMessage} className="flex items-center ">
+        <div className="flex-1 flex ">
           {/* Gallery Icon */}
           <button
             type="button"
-            className={`btn bg-base-300 px-3 rounded-r-none py-[1.47rem] ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            className={`btn bg-base-300 px-5 rounded-full rounded-r-none py-[1.72rem] ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
-            <Image size={20} />
+            <Image size={24} />
           </button>
 
           {/* Input Field */}
           <input
             type="text"
-            className="w-full input border-none focus:outline-none focus:border-none bg-base-300 rounded-none input-md sm:input-md py-6 pl-6"
+            className="w-full input border-none focus:outline-none focus:border-none bg-base-300 rounded-none input-md sm:input-md py-7 pl-4"
             placeholder="Type a message..."
             value={text}
             ref={inputRef}
@@ -109,7 +109,7 @@ const MessageInput = () => {
         {/* Send Button */}
         <button
           type="submit"
-          className=" bg-base-300 py-[0.82rem] rounded-r-md cursor-pointer px-3"
+          className=" bg-base-300 py-[1.1rem] rounded-full rounded-l-md cursor-pointer px-6"
           disabled={!text.trim() && !imagePreview}
         >
           <Send size={22} />

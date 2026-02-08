@@ -6,8 +6,8 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
+  process.env.FRONTEND_URL,
   "http://localhost:5173",
-  "https://realtime-chat-app-ru36.onrender.com/",
 ];
 
 const io = new Server(server, {

@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { formatMessageTime } from "../lib/utils";
+import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
-import { useChatStore } from "../store/useChatStore";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { useAuthStore } from "../store/useAuthStore";
-import { formatMessageTime } from "../lib/utils";
 
 const ChatContainer = ({ onBack, isChatVisible }) => {
   const {
@@ -12,27 +12,22 @@ const ChatContainer = ({ onBack, isChatVisible }) => {
     isMessagesLoading,
     getMessages,
     selectedUser,
-    subscribeToMessages,
-    unsubscribeFromMessages,
   } = useChatStore();
 
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    if (selectedUser) {
-      getMessages(selectedUser._id);
-      subscribeToMessages();
-    }
-
-    return () => unsubscribeFromMessages();
-  }, [getMessages, selectedUser, subscribeToMessages, unsubscribeFromMessages]);
-
-  useEffect(() => {
     if (messageEndRef.current && messages) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (selectedUser) {
+      getMessages(selectedUser._id);
+    }
+  }, [selectedUser, getMessages]);
 
   if (isMessagesLoading)
     return (
@@ -41,7 +36,7 @@ const ChatContainer = ({ onBack, isChatVisible }) => {
         <div className="flex-1 overflow-y-auto">
           <MessageSkeleton />
         </div>
-        <MessageInput  />
+        <MessageInput />
       </div>
     );
 

@@ -8,6 +8,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
 import MainLayout from "./components/MainLayout";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -33,7 +34,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route
             path="/"
-            element={authUser ? <HomePage /> : <Navigate to="/login" />}
+            element={authUser ? <HomePage /> : <LandingPage />}
           />
           <Route
             path="/profile"

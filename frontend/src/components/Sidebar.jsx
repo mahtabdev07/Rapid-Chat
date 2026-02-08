@@ -7,32 +7,47 @@ import { useAuthStore } from "../store/useAuthStore";
 const Sidebar = ({ onSelectUser }) => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
+  const { onlineUsers, authUser } = useAuthStore();
 
-  const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
+  // ✅ Hook 1 — fetch users
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
+  // ✅ Hook 2 — open chat when selectedUser changes (toast click)
+  useEffect(() => {
+    if (selectedUser) {
+      onSelectUser();
+    }
+  }, [selectedUser, onSelectUser]);
+
+  // ❌ NO HOOKS BELOW THIS LINE
+  if (isUsersLoading) return <SidebarSkeleton />;
+
   const handleUserSelect = (user) => {
     setSelectedUser(user);
-    onSelectUser(); // Signal the parent component to open chat on small screens.
+    onSelectUser();
   };
 
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
 
-  if (isUsersLoading) return <SidebarSkeleton />;
+  const onlineCount = Math.max(
+    onlineUsers.filter((id) => id !== authUser?._id).length,
+    0,
+  );
 
   return (
-    <aside className="h-full w-full lg:w-[22rem] border-r border-base-300 flex flex-col transition-all duration-200">
-      <div className="border-b border-base-300 w-full px-5 py-4 sm:p-5">
+    <aside className="h-full w-full lg:w-[22rem] border-r border-base-300 flex flex-col">
+      <div className="border-b border-base-300 px-5 py-4">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
           <span className="font-medium">Contacts</span>
         </div>
+
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -43,39 +58,30 @@ const Sidebar = ({ onSelectUser }) => {
             />
             <span className="text-sm">Show online only</span>
           </label>
-          <span className="text-xs text-zinc-500">
-            ({onlineUsers.length - 1} online)
-          </span>
+          <span className="text-xs text-zinc-500">({onlineCount} online)</span>
         </div>
       </div>
 
-      <div className="overflow-y-auto w-full py-3">
+      <div className="overflow-y-auto py-3">
         {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={() => handleUserSelect(user)}
-            className={`w-full p-3 flex items-center gap-4 hover:bg-base-300 transition-colors ${
-              selectedUser?._id === user._id
-                ? "bg-base-300 ring-1 ring-base-300"
-                : ""
+            className={`w-full p-3 flex items-center gap-4 hover:bg-base-300 ${
+              selectedUser?._id === user._id ? "bg-base-300" : ""
             }`}
           >
-            {/* Profile Picture */}
             <div className="relative">
               <img
                 src={user.profilePic || "/avatar.png"}
-                alt={user.name}
-                className="size-12 object-cover rounded-full"
+                alt={user.fullName}
+                className="size-12 rounded-full object-cover"
               />
               {onlineUsers.includes(user._id) && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                />
+                <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
               )}
             </div>
 
-            {/* User Info */}
             <div className="text-left min-w-0">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">

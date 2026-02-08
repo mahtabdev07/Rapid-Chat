@@ -59,25 +59,34 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    const receiverSockerId = getReceiverSockerId(receiverId);
-    if (receiverSockerId) {
-      io.to(receiverSockerId).emit("newMessage", newMessage);
-    }
-
     await updateLastMessageTime(senderId);
     await updateLastMessageTime(receiverId);
 
-    const updatedUsers = await User.find({
-      _id: { $ne: senderId },
-    })
-      .sort({ lastMessageTime: -1 })
-      .select("-password");
+    const receiverSocketId = getReceiverSockerId(receiverId);
+    const senderSocketId = getReceiverSockerId(senderId);
 
-    io.emit("updateUserList", updatedUsers);
+    // ✅ SEND MESSAGE (ONLY ONCE)
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+
+      // move SENDER to top on receiver sidebar
+      io.to(receiverSocketId).emit("sidebarReorder", {
+        userId: senderId,
+        lastMessageTime: newMessage.createdAt,
+      });
+    }
+
+    // move RECEIVER to top on sender sidebar
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("sidebarReorder", {
+        userId: receiverId,
+        lastMessageTime: newMessage.createdAt,
+      });
+    }
 
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error in sendMessage Controller", error.message); // Corrected
+    console.log("Error in sendMessage Controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -86,6 +95,6 @@ const updateLastMessageTime = async (senderId) => {
   await User.findByIdAndUpdate(
     senderId,
     { lastMessageTime: new Date() }, // Update the timestamp
-    { new: true } // Return the updated document
+    { new: true }, // Return the updated document
   );
 };

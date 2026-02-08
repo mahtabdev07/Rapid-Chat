@@ -53,23 +53,6 @@ const NoChatSelected = () => {
           Welcome to <span className="text-blue-400">Chatify</span>
         </h1>
 
-        <p className="text-slate-300 text-lg mb-6 leading-relaxed">
-          Select a conversation from the sidebar to start chatting with your
-          friends and colleagues.
-        </p>
-
-        {/* Feature highlights */}
-        <div className="space-y-3 mb-8">
-          <div className="flex items-center justify-center text-slate-400 text-sm">
-            <div className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></div>
-            Real-time messaging
-          </div>
-          <div className="flex items-center justify-center text-slate-400 text-sm">
-            <div className="w-2 h-2 bg-blue-400 rounded-full mr-3 animate-pulse"></div>
-            Secure conversations
-          </div>
-        </div>
-
         {/* Call to Action */}
         <div className="text-slate-500 text-sm">
           Click on any contact to begin your conversation
