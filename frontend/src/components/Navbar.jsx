@@ -21,7 +21,7 @@ const Navbar = () => {
               <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto shadow-2xl">
                 <MessageCircle size={20} className="text-white" />
               </div>
-              <h1 className="text-lg font-bold">Chatify</h1>
+              <h1 className="text-lg font-bold">Rapid Chat</h1>
             </Link>
           </div>
 

@@ -50,7 +50,7 @@ const NoChatSelected = () => {
 
         {/* Welcome Text */}
         <h1 className="text-3xl font-bold text-white mb-4 tracking-tight">
-          Welcome to <span className="text-blue-400">Chatify</span>
+          Welcome to <span className="text-blue-400">Rapid Chat</span>
         </h1>
 
         {/* Call to Action */}
